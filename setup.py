@@ -9,9 +9,6 @@ setup(
         'Click',
         'requests',
         'bs4',
-        'pprint',
-        'json',
-        'datetime',
     ],
     entry_points='''
         [console_scripts]
