@@ -58,6 +58,12 @@ def cli(uid, key, rows, balances, raw):
         if row[0]=='Balance':
             r['balances'].append((row[1], float(row[6])))
 
+    r['payments']={}
+    for row in r['rows']:
+        if row[0]=='Payment':
+            r['payments'][row[1]]=float(row[5])
+
+
     if not raw:
         begin_date = datetime.datetime.strptime(r['balances'][0][0], '%Y-%m-%d')
         begin_amount = float(r['balances'][0][1])
@@ -73,3 +79,6 @@ def cli(uid, key, rows, balances, raw):
 
 
     print(json.dumps(r))
+
+if __name__ == '__main__':
+    cli()
