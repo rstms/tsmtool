@@ -1,5 +1,5 @@
 #!/bin/bash
 source `which virtualenvwrapper.sh`
 workon tsmtool
-awk <~/.tsmtool '{system(sprintf("tsmtool --uid=%s --key=%s", $1, $2))}'
+awk <~/.tsmtool '{system(sprintf("tsmtool --uid=%s --key=%s --payments", $1, $2))}'
 deactivate
