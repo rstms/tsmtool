@@ -10,7 +10,7 @@ bumpversion = bumpversion $(1) --allow-dirty --commit --tag --current-version $(
   $(project)/version.py
 
 # bump patch level
-bump-patch: timestamp
+bump-patch: timestamp 
 	$(call bumpversion,patch)
 	git push
 
@@ -39,13 +39,14 @@ version-clean:
 
 # update requirements.txt
 requirements: .requirements
-.requirements: test-requirements.txt
+.requirements: pyproject.toml
 	$(MAKE) uninstall
 	bash -lc 'workon tsmtool; wipeenv'
 	$(MAKE) install
 	pip freeze | grep -v tsmtool >requirements.txt
-	$(MAKE) dev
 	$(MAKE) docs
+	pip freeze | grep -v tsmtool >docs/requirements.txt
+	$(MAKE) dev
 	pip freeze | grep -v tsmtool >test-requirements.txt
 	@touch $@
 	@echo "Requirements Updated"
