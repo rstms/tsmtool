@@ -2,14 +2,12 @@ beautifulsoup4==4.10.0
 bs4==0.0.1
 certifi==2021.10.8
 charset-normalizer==2.0.12
-click==8.0.3
-docutils==0.18.1
-flit==3.7.1
-flit_core==3.7.1
+click==8.0.4
 idna==3.3
+packaging==21.3
+pyparsing==3.0.7
 requests==2.27.1
+six==1.16.0
 soupsieve==2.3.1
-tomli==2.0.1
-tomli_w==1.0.0
 tsmtool @ file:///home/mkrueger/src/tsmtool
 urllib3==1.26.9

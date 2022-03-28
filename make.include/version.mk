@@ -35,3 +35,18 @@ timestamp: .timestamp
 # clean up version tempfiles
 version-clean:
 	rm -f .timestamp
+	rm -f .requirements
+
+# update requirements.txt
+requirements: .requirements
+.requirements: test-requirements.txt
+	$(MAKE) uninstall
+	bash -lc 'workon tsmtool; wipeenv'
+	$(MAKE) install
+	pip freeze >requirements.txt
+	$(MAKE) dev
+	$(MAKE) docs
+	pip freeze >test-requirements.txt
+	@touch $@
+	@echo "Requirements Updated"
+
