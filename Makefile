@@ -1,23 +1,19 @@
-# make install, uninstall
+# top-level Makefile 
 
-.ONESHELL:
-SHELL = /bin/bash
+# remove module from the local python environment
+uninstall: 
+	pip uninstall -yqq $(project)
 
-default:
-	@echo "Commands:\n  make install\n  make uninstall"
+# install to the local environment from the source directory
+install: 
+	pip install --upgrade .
 
-.PHONY: install uninstall
+# local install in editable mode for development
+dev: uninstall 
+	pip install --upgrade -e .[dev]
 
-venv:
-	. `which virtualenvwrapper.sh`
-	mkvirtualenv -p python3 tsmtool
-	workon tsmtool
+# remove all build, test, coverage and Python artifacts
+clean: 
+	for clean in $(call included,clean); do ${MAKE} $$clean; done
 
-install:
-	sudo pip install .
-	sudo cp bin/tarsnap-report /usr/local/bin
-
-uninstall:
-	. `which virtualenvwrapper.sh`
-	rmvirtualenv tsmtool
-	sudo rm /usr/local/bin/tarsnap-report
+include $(wildcard make.include/*.mk)
