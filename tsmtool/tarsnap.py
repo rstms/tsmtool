@@ -3,7 +3,6 @@
 import datetime
 from pathlib import Path
 
-
 import requests
 from bs4 import BeautifulSoup, element
 
@@ -16,7 +15,6 @@ class Tarsnap:
         self.url = URL
         self.account = account or "undefined"
         self.config = {}
-        first_account = None
         if config_file and config_file.exists():
             for line in Path(config_file).open("r").readlines():
                 _account, _email, _password = line.split()
@@ -54,12 +52,18 @@ class Tarsnap:
         verbose_soup = None
 
         soup = BeautifulSoup(response.text, "html.parser")
-        #print(soup.prettify())
+        # print(soup.prettify())
 
-        for el in [e for e in soup.find_all("div") if e and isinstance(e, element.Tag)]:
-            for div in [e for e in el.find_all('div') if e and isinstance(e, element.Tag)]:
-                if div.attrs.get('class') == ['boxcontents']:
-                    msg = div.text.strip().split('\n')[0]
+        for el in [
+            e for e in soup.find_all("div") if e and isinstance(e, element.Tag)
+        ]:
+            for div in [
+                e
+                for e in el.find_all("div")
+                if e and isinstance(e, element.Tag)
+            ]:
+                if div.attrs.get("class") == ["boxcontents"]:
+                    msg = div.text.strip().split("\n")[0]
                     if f"You are logged in as {self.email}" not in msg:
                         raise RuntimeError(msg)
 
@@ -87,7 +91,15 @@ class Tarsnap:
             payment = 0
         return payment
 
-    def get_status(self, rows=False, balances=False, payments=False, raw=False, email=None, password=None):
+    def get_status(
+        self,
+        rows=False,
+        balances=False,
+        payments=False,
+        raw=False,
+        email=None,
+        password=None,
+    ):
 
         email = email or self.email
         password = password or self.password
