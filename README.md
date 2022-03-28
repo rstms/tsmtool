@@ -1,12 +1,9 @@
-=======
-tsmtool
-=======
+# tsmtool -  Tarsnap Status Monitor Reporting Tool
 
 
 ![Image](https://img.shields.io/github/license/rstms/tsmtool)
 
 ![Image](https://img.shields.io/pypi/v/tsmtool.svg)
-
 
 ![Image](https://circleci.com/gh/rstms/tsmtool/tree/master.svg?style=shield)
 
@@ -16,9 +13,9 @@ tsmtool
 
 Tarsnap Status Monitor
 
-The most excellent tarsnap.com has a clean and functional interface for managing one's account.  This tool connects to the
-web interface and queries data, producing a JSON-formated report.  The current balance is read, and an estimated monthly
-cost is calculated based on the site's daily cost data.
+The most excellent backup service tarsnap.com provides a clean and functional interface for managing one's account.
+This tool connects to the web interface and queries data, producing a JSON-formated report.  The current balance is
+read, and an estimated monthly cost is calculated based on the site's daily cost data.
 
 Here's an example of output from the author's account:
 ```
