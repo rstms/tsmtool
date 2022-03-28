@@ -106,3 +106,4 @@ venv.bak/
 # locals
 .timestamp
 .dist
+.postactivate

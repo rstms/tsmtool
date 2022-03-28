@@ -3,12 +3,6 @@ from pathlib import Path
 import pytest
 
 from tsmtool import Tarsnap
-from tsmtool.cli import DEFAULT_CONFIG
-
-
-@pytest.fixture
-def config_file():
-    return Path(DEFAULT_CONFIG)
 
 
 @pytest.fixture

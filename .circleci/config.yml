@@ -9,6 +9,7 @@ jobs:
       - image: cimg/python:3.10.2
     steps:
       - checkout
+
       - install:
           name: install package for dev
           command: pip install .[dev]
