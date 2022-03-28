@@ -28,3 +28,16 @@ def test_tsmtool_report(config_file, default_account):
     report = t.get_status(rows, balance, payments, raw)
     assert report
     assert isinstance(report, dict)
+
+def test_tsmtool_bad_email():
+    t = Tarsnap(None, None, email='user@example.com', password='1337_d00d')
+    with pytest.raises(RuntimeError) as exc_info: 
+        r = t.get_status()
+    print(exc_info)
+
+def test_tsmtool_bad_password(config_file, default_account):
+    t = Tarsnap(config_file, default_account, password='1337_d00d')
+    with pytest.raises(RuntimeError) as exc_info: 
+        r = t.get_status()
+    print(exc_info)
+

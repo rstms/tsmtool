@@ -43,6 +43,9 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option(
     "--list", "_list", is_flag=True, help="list accounts in config file"
 )
+@click.option(
+    "--all", "_all", is_flag=True, help="generate report for all accounts in config file"
+)
 @click.option("-d", "--debug", is_flag=True, help="debug mode")
 @click.argument("account", type=str, required=False, default=None)
 def cli(
@@ -54,6 +57,7 @@ def cli(
     payments,
     raw,
     _list,
+    _all,
     debug,
     account,
 ):
@@ -78,12 +82,17 @@ def cli(
 
     tarsnap = Tarsnap(config_file, account, email, password)
 
+    output = {}
+
     if _list:
+        output ['accounts'] = [_account for _account in tarsnap.config]
+    elif _all:
         for _account in tarsnap.config:
-            click.echo(_account)
-        return 0
+            tarsnap = Tarsnap(config_file, _account)
+            output[_account] = tarsnap.get_status(rows, balances, payments, raw)
     else:
-        status = tarsnap.get_status(rows, balances, payments, raw)
-        click.echo(json.dumps(status, indent=2))
+        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw)
+
+    click.echo(json.dumps(output, indent=2))
 
     return 0

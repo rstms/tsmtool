@@ -3,30 +3,31 @@
 import datetime
 from pathlib import Path
 
+
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, element
 
 URL = "https://www.tarsnap.com"
 
 
 class Tarsnap:
-    def __init__(self, config_file, account, uid=None, key=None):
+    def __init__(self, config_file, account=None, email=None, password=None):
 
         self.url = URL
-        self.uid = uid
-        self.key = key
         self.account = account or "undefined"
         self.config = {}
-        if config_file.exists():
+        first_account = None
+        if config_file and config_file.exists():
             for line in Path(config_file).open("r").readlines():
-                _account, _uid, _key = line.split()
-                self.config[_account] = dict(uid=_uid, key=_key)
+                _account, _email, _password = line.split()
+                self.config[_account] = dict(email=_email, password=_password)
+                if not account:
+                    account = _account
 
         _config = self.config.get(account, {})
 
-        if account:
-            self.uid = _config.get("uid")
-            self.key = _config.get("key")
+        self.email = email or _config.get("email")
+        self.password = password or _config.get("password")
 
         self.session = requests.Session()
 
@@ -42,7 +43,7 @@ class Tarsnap:
     def _query(self):
 
         response = self._post(
-            "manage.cgi", {"address": self.uid, "password": self.key}
+            "manage.cgi", {"address": self.email, "password": self.password}
         )
 
         # for div in [soup.find('div')]:
@@ -53,6 +54,14 @@ class Tarsnap:
         verbose_soup = None
 
         soup = BeautifulSoup(response.text, "html.parser")
+        #print(soup.prettify())
+
+        for el in [e for e in soup.find_all("div") if e and isinstance(e, element.Tag)]:
+            for div in [e for e in el.find_all('div') if e and isinstance(e, element.Tag)]:
+                if div.attrs.get('class') == ['boxcontents']:
+                    msg = div.text.strip().split('\n')[0]
+                    if f"You are logged in as {self.email}" not in msg:
+                        raise RuntimeError(msg)
 
         for el in soup.find("div").find_all("p"):
             if "current account balance" in el.text:
@@ -78,16 +87,16 @@ class Tarsnap:
             payment = 0
         return payment
 
-    def get_status(self, rows, balances, payments, raw, uid=None, key=None):
+    def get_status(self, rows=False, balances=False, payments=False, raw=False, email=None, password=None):
 
-        uid = uid or self.uid
-        key = key or self.key
+        email = email or self.email
+        password = password or self.password
 
-        if not uid:
-            raise ValueError("--uid is required")
+        if not email:
+            raise ValueError("--email is required")
 
-        if not key:
-            raise ValueError("--key is required")
+        if not password:
+            raise ValueError("--password is required")
 
         balance, account, soup = self._query()
         r = {}
