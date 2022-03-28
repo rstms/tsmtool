@@ -126,20 +126,21 @@ class Tarsnap:
             payment_total += self._handle_row(r, row)
 
         if not raw:
-            begin_date = datetime.datetime.strptime(
-                r["balances"][0][0], "%Y-%m-%d"
-            )
-            begin_amount = float(r["balances"][0][1])
-            end_date = datetime.datetime.strptime(
-                r["balances"][-1][0], "%Y-%m-%d"
-            )
-            end_amount = float(r["balances"][-1][1])
-            r["monthly_cost"] = self._round(
-                (begin_amount - (end_amount - payment_total))
-                / (end_date - begin_date).days
-                * 365
-                / 12
-            )
+            if r['balances']:
+                begin_date = datetime.datetime.strptime(
+                    r["balances"][0][0], "%Y-%m-%d"
+                )
+                begin_amount = float(r["balances"][0][1])
+                end_date = datetime.datetime.strptime(
+                    r["balances"][-1][0], "%Y-%m-%d"
+                )
+                end_amount = float(r["balances"][-1][1])
+                r["monthly_cost"] = self._round(
+                    (begin_amount - (end_amount - payment_total))
+                    / (end_date - begin_date).days
+                    * 365
+                    / 12
+                )
 
         if not rows:
             del r["rows"]
