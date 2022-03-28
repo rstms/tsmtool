@@ -126,7 +126,7 @@ class Tarsnap:
             payment_total += self._handle_row(r, row)
 
         if not raw:
-            if r['balances']:
+            if r["balances"]:
                 begin_date = datetime.datetime.strptime(
                     r["balances"][0][0], "%Y-%m-%d"
                 )

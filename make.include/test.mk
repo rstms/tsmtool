@@ -29,8 +29,9 @@ testls:
 
 # test with tox if sources have changed
 .PHONY: tox
-tox: .tox 
+tox: .tox
 .tox: $(python_src) tox.ini
+	$(MAKE) lint
 	tox
 	@touch $@
 
