@@ -14,11 +14,12 @@
 Tarsnap Status Monitor
 
 ## Introduction 
-The most excellent backup service tarsnap.com provides a clean and functional interface for managing one's account.
-This tool connects to the web interface and queries data, producing a JSON-formated report.  The current balance is
+The most excellent backup service [Tarsnap](https://www.tarsnap.com) provides a clean
+and functional interface for managing one's account.  This tool connects to that web
+interface and queries data, producing a JSON-formated report.  The current balance is
 read, and an estimated monthly cost is calculated based on the site's daily cost data.
 
-### example output
+### Example Output
 Here's an example of output from the author's tarsnap account:
 ```
 (tsmtool) mkrueger@beaker:~/src/tsmtool$ tsmtool rstms
@@ -45,6 +46,8 @@ ACCOUNT_NAME    EMAIL_ADDRESS   PASSWORD
 
 
 ## Credits
+
+[Tarsnap](https://www.tarsnap.com) 
 
 This package was created with Cookiecutter and `rstms/cookiecutter-python-cli`, a fork of the `audreyr/cookiecutter-pypackage` project template.
 
