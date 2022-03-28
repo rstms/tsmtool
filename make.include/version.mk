@@ -43,10 +43,10 @@ requirements: .requirements
 	$(MAKE) uninstall
 	bash -lc 'workon tsmtool; wipeenv'
 	$(MAKE) install
-	pip freeze >requirements.txt
+	pip freeze | grep -v tsmtool >requirements.txt
 	$(MAKE) dev
 	$(MAKE) docs
-	pip freeze >test-requirements.txt
+	pip freeze | grep -v tsmtool >test-requirements.txt
 	@touch $@
 	@echo "Requirements Updated"
 

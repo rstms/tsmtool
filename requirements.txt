@@ -9,5 +9,4 @@ pyparsing==3.0.7
 requests==2.27.1
 six==1.16.0
 soupsieve==2.3.1
-tsmtool @ file:///home/mkrueger/src/tsmtool
 urllib3==1.26.9

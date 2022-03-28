@@ -5,7 +5,12 @@
 install-docs:
 	pip install -U .[docs]
 
-docs: install-docs clean-docs
+docs/readme.rst: README.md
+	m2r2 --overwrite $<
+	mv README.rst $@
+
+
+docs: install-docs clean-docs docs/readme.rst
 	sphinx-apidoc -o docs/ $(project)
 	$(MAKE) -C docs html
 	$(browser) docs/_build/html/index.html
@@ -14,6 +19,7 @@ docs: install-docs clean-docs
 clean-docs:
 	rm -f docs/$(project).rst
 	rm -f docs/modules.rst
+	rm -f docs/readme.rst
 	$(MAKE) -C docs clean
 
 # run a dev-mode docs webserver; recompiling on changes 
