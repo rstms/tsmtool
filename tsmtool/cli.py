@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+from tabulate import tabulate
 from pathlib import Path
 
 import click
@@ -49,6 +50,9 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
     is_flag=True,
     help="generate report for all accounts in config file",
 )
+@click.option("-f", "--table", "fmt", flag_value="table", default="table", help="output table format")
+@click.option("-j", "--json", "fmt", flag_value="json", help="output json")
+@click.option("--tablefmt", default="simple_outline")
 @click.option("-d", "--debug", is_flag=True, help="debug mode")
 @click.argument("account", type=str, required=False, default=None)
 def cli(
@@ -63,6 +67,8 @@ def cli(
     _all,
     debug,
     account,
+    fmt,
+    tablefmt
 ):
     """login to tarsnap.com and output account status as JSON data
 
@@ -100,6 +106,12 @@ def cli(
             rows, balances, payments, raw
         )
 
-    click.echo(json.dumps(output, indent=2))
+    if fmt=="table":
+        output = [dict(name=k, **v) for k,v in output.items()]
+        output = tabulate(output, headers="keys", tablefmt=tablefmt)
+    else:
+        output = json.dumps(output, indent=2)
+
+    click.echo(output)
 
     return 0

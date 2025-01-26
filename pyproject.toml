@@ -24,7 +24,8 @@ dynamic = ["version", "description"]
 dependencies = [
   "bs4==0.0.1",
   "click==8.0.4",
-  "requests==2.27.1"
+  "requests==2.27.1",
+  "tabulate"
 ]
 
 [project.optional-dependencies]
@@ -36,7 +37,8 @@ dev = [
   "flit==3.7.1",
   "pytest==7.1.1",
   "pytest-datadir==1.3.1",
-  "tox==3.24.5"
+  "tox==3.24.5",
+  "pdbpp"
 ]
 docs = [
   "m2r2==0.3.2",
