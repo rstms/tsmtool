@@ -16,13 +16,13 @@ Tarsnap Status Monitor
 ## Introduction 
 The most excellent backup service [Tarsnap](https://www.tarsnap.com) provides a clean
 and functional interface for managing one's account.  This tool connects to that web
-interface and queries data, producing a JSON-formated report.  The current balance is
+interface and queries data, producing a report as a table or JSON.  The current balance is
 read, and an estimated monthly cost is calculated based on the site's daily cost data.
 
 ### Example Output
 Here's an example of output from the author's tarsnap account:
 ```
-(tsmtool) mkrueger@beaker:~/src/tsmtool$ tsmtool rstms
+(tsmtool) mkrueger@beaker:~/src/tsmtool$ tsmtool --json rstms
 {
   "balance": 32.51,
   "account": "mkrueger@rstms.net",
