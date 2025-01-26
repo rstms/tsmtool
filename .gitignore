@@ -109,3 +109,6 @@ venv.bak/
 .postactivate
 .requirements
 .release
+.black
+.errors
+.flake8

@@ -40,9 +40,7 @@ class Tarsnap:
 
     def _query(self):
 
-        response = self._post(
-            "manage.cgi", {"address": self.email, "password": self.password}
-        )
+        response = self._post("manage.cgi", {"address": self.email, "password": self.password})
 
         # for div in [soup.find('div')]:
         #   print('div: %s ' % repr(div.text))
@@ -54,14 +52,8 @@ class Tarsnap:
         soup = BeautifulSoup(response.text, "html.parser")
         # print(soup.prettify())
 
-        for el in [
-            e for e in soup.find_all("div") if e and isinstance(e, element.Tag)
-        ]:
-            for div in [
-                e
-                for e in el.find_all("div")
-                if e and isinstance(e, element.Tag)
-            ]:
+        for el in [e for e in soup.find_all("div") if e and isinstance(e, element.Tag)]:
+            for div in [e for e in el.find_all("div") if e and isinstance(e, element.Tag)]:
                 if div.attrs.get("class") == ["boxcontents"]:
                     msg = div.text.strip().split("\n")[0]
                     if f"You are logged in as {self.email}" not in msg:
@@ -127,19 +119,12 @@ class Tarsnap:
 
         if not raw:
             if r["balances"]:
-                begin_date = datetime.datetime.strptime(
-                    r["balances"][0][0], "%Y-%m-%d"
-                )
+                begin_date = datetime.datetime.strptime(r["balances"][0][0], "%Y-%m-%d")
                 begin_amount = float(r["balances"][0][1])
-                end_date = datetime.datetime.strptime(
-                    r["balances"][-1][0], "%Y-%m-%d"
-                )
+                end_date = datetime.datetime.strptime(r["balances"][-1][0], "%Y-%m-%d")
                 end_amount = float(r["balances"][-1][1])
                 r["monthly_cost"] = self._round(
-                    (begin_amount - (end_amount - payment_total))
-                    / (end_date - begin_date).days
-                    * 365
-                    / 12
+                    (begin_amount - (end_amount - payment_total)) / (end_date - begin_date).days * 365 / 12
                 )
 
         if not rows:

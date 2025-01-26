@@ -3,10 +3,10 @@
 import json
 import os
 import sys
-from tabulate import tabulate
 from pathlib import Path
 
 import click
+from tabulate import tabulate
 
 from .tarsnap import Tarsnap
 from .version import __timestamp__, __version__
@@ -26,9 +26,7 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
     envvar="TSMTOOL_CONFIG",
     help="config file for tsmtool",
 )
-@click.option(
-    "-e", "--email", envvar="TSMTOOL_EMAIL", help="email address website login"
-)
+@click.option("-e", "--email", envvar="TSMTOOL_EMAIL", help="email address website login")
 @click.option(
     "-p",
     "--password",
@@ -38,12 +36,8 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option("--rows", is_flag=True, help="include all row data")
 @click.option("--balances", is_flag=True, help="include daily balances")
 @click.option("--payments", is_flag=True, help="include payments")
-@click.option(
-    "--raw", is_flag=True, help="raw data only (skip calculated fields)"
-)
-@click.option(
-    "--list", "_list", is_flag=True, help="list accounts in config file"
-)
+@click.option("--raw", is_flag=True, help="raw data only (skip calculated fields)")
+@click.option("--list", "_list", is_flag=True, help="list accounts in config file")
 @click.option(
     "--all",
     "_all",
@@ -55,21 +49,7 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option("--tablefmt", default="simple_outline")
 @click.option("-d", "--debug", is_flag=True, help="debug mode")
 @click.argument("account", type=str, required=False, default=None)
-def cli(
-    config_file,
-    email,
-    password,
-    rows,
-    balances,
-    payments,
-    raw,
-    _list,
-    _all,
-    debug,
-    account,
-    fmt,
-    tablefmt
-):
+def cli(config_file, email, password, rows, balances, payments, raw, _list, _all, debug, account, fmt, tablefmt):
     """login to tarsnap.com and output account status as JSON data
 
     config file: ~/.tsmtool
@@ -78,9 +58,7 @@ def cli(
     account     email_address   password
     """
 
-    def exception_handler(
-        exception_type, exception, traceback, debug_hook=sys.excepthook
-    ):
+    def exception_handler(exception_type, exception, traceback, debug_hook=sys.excepthook):
 
         if debug:
             debug_hook(exception_type, exception, traceback)
@@ -98,16 +76,12 @@ def cli(
     elif _all:
         for _account in tarsnap.config:
             tarsnap = Tarsnap(config_file, _account)
-            output[_account] = tarsnap.get_status(
-                rows, balances, payments, raw
-            )
+            output[_account] = tarsnap.get_status(rows, balances, payments, raw)
     else:
-        output[tarsnap.account] = tarsnap.get_status(
-            rows, balances, payments, raw
-        )
+        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw)
 
-    if fmt=="table":
-        output = [dict(name=k, **v) for k,v in output.items()]
+    if fmt == "table":
+        output = [dict(name=k, **v) for k, v in output.items()]
         output = tabulate(output, headers="keys", tablefmt=tablefmt)
     else:
         output = json.dumps(output, indent=2)
