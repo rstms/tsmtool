@@ -84,13 +84,7 @@ class Tarsnap:
         return payment
 
     def get_status(
-        self,
-        rows=False,
-        balances=False,
-        payments=False,
-        raw=False,
-        email=None,
-        password=None,
+        self, rows=False, balances=False, payments=False, raw=False, email=None, password=None, last_payment=False
     ):
 
         email = email or self.email
@@ -119,13 +113,7 @@ class Tarsnap:
 
         if not raw:
             if r["balances"]:
-                begin_date = datetime.datetime.strptime(r["balances"][0][0], "%Y-%m-%d")
-                begin_amount = float(r["balances"][0][1])
-                end_date = datetime.datetime.strptime(r["balances"][-1][0], "%Y-%m-%d")
-                end_amount = float(r["balances"][-1][1])
-                r["monthly_cost"] = self._round(
-                    (begin_amount - (end_amount - payment_total)) / (end_date - begin_date).days * 365 / 12
-                )
+                r["monthly_cost"] = self.calculate_monthly_cost(r["balances"], payment_total)
 
         if not rows:
             del r["rows"]
@@ -133,7 +121,26 @@ class Tarsnap:
         if not balances:
             del r["balances"]
 
+        if last_payment:
+            r.update(self.last_payment_fields(r.get("payments", {})))
+            payments = False
+
         if not payments:
             del r["payments"]
 
         return r
+
+    def calculate_monthly_cost(self, balances, payment_total):
+        begin_date = datetime.datetime.strptime(balances[0][0], "%Y-%m-%d")
+        begin_amount = float(balances[0][1])
+        end_date = datetime.datetime.strptime(balances[-1][0], "%Y-%m-%d")
+        end_amount = float(balances[-1][1])
+        return self._round((begin_amount - (end_amount - payment_total)) / (end_date - begin_date).days * 365 / 12)
+
+    def last_payment_fields(self, payments):
+        last_date = ""
+        last_amount = ""
+        if payments:
+            last_date = sorted(list(payments.keys()))[-1]
+            last_amount = payments[last_date]
+        return dict(last_payment_date=last_date, last_payment_amount=last_amount)

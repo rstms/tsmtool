@@ -36,6 +36,7 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option("--rows", is_flag=True, help="include all row data")
 @click.option("--balances", is_flag=True, help="include daily balances")
 @click.option("--payments", is_flag=True, help="include payments")
+@click.option("--last-payment", is_flag=True, help="include last payment")
 @click.option("--raw", is_flag=True, help="raw data only (skip calculated fields)")
 @click.option("--list", "_list", is_flag=True, help="list accounts in config file")
 @click.option(
@@ -49,7 +50,22 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option("--tablefmt", default="simple_outline")
 @click.option("-d", "--debug", is_flag=True, help="debug mode")
 @click.argument("account", type=str, required=False, default=None)
-def cli(config_file, email, password, rows, balances, payments, raw, _list, _all, debug, account, fmt, tablefmt):
+def cli(
+    config_file,
+    email,
+    password,
+    rows,
+    balances,
+    payments,
+    raw,
+    _list,
+    _all,
+    debug,
+    account,
+    fmt,
+    tablefmt,
+    last_payment,
+):
     """login to tarsnap.com and output account status as JSON data
 
     config file: ~/.tsmtool
@@ -76,13 +92,13 @@ def cli(config_file, email, password, rows, balances, payments, raw, _list, _all
     elif _all:
         for _account in tarsnap.config:
             tarsnap = Tarsnap(config_file, _account)
-            output[_account] = tarsnap.get_status(rows, balances, payments, raw)
+            output[_account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment)
     else:
-        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw)
+        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment)
 
     if fmt == "table":
         output = [dict(name=k, **v) for k, v in output.items()]
-        output = tabulate(output, headers="keys", tablefmt=tablefmt)
+        output = tabulate(output, headers="keys", tablefmt=tablefmt, floatfmt=".2f")
     else:
         output = json.dumps(output, indent=2)
 

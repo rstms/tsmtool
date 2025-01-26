@@ -112,3 +112,4 @@ venv.bak/
 .black
 .errors
 .flake8
+notes
