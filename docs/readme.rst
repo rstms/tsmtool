@@ -39,7 +39,7 @@ Introduction
 
 The most excellent backup service `Tarsnap <https://www.tarsnap.com>`_ provides a clean
 and functional interface for managing one's account.  This tool connects to that web
-interface and queries data, producing a JSON-formated report.  The current balance is
+interface and queries data, producing a report as a table or JSON.  The current balance is
 read, and an estimated monthly cost is calculated based on the site's daily cost data.
 
 Example Output
@@ -49,7 +49,7 @@ Here's an example of output from the author's tarsnap account:
 
 .. code-block::
 
-   (tsmtool) mkrueger@beaker:~/src/tsmtool$ tsmtool rstms
+   (tsmtool) mkrueger@beaker:~/src/tsmtool$ tsmtool --json rstms
    {
      "balance": 32.51,
      "account": "mkrueger@rstms.net",
@@ -83,3 +83,5 @@ This package was created with Cookiecutter and ``rstms/cookiecutter-python-cli``
 `audreyr/cookiecutter <https://github.com/audreyr/cookiecutter>`_
 `audreyr/cookiecutter-pypackage <https://github.com/audreyr/cookiecutter-pypackage>`_
 `rstms/cookiecutter-python-cli <https://github.com/rstms/cookiecutter-python-cli>`_
+``
+``

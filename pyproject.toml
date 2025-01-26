@@ -21,9 +21,6 @@ classifiers = [
 ]
 dynamic = ["version", "description"] 
 
-[tool.flit.module]
-name = "tsmtool"
-
 dependencies = [
   "bs4",
   "click",
@@ -49,6 +46,9 @@ docs = [
   "sphinx-click",
   "sphinx-rtd-theme"
 ]
+
+[tool.flit.module]
+name = "tsmtool"
 
 [project.urls]
 Home = "https://github.com/rstms/tsmtool"
