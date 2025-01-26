@@ -21,6 +21,9 @@ classifiers = [
 ]
 dynamic = ["version", "description"] 
 
+[tool.flit.module]
+name = "tsmtool"
+
 dependencies = [
   "bs4==0.0.1",
   "click==8.0.4",
