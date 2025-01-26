@@ -25,29 +25,29 @@ dynamic = ["version", "description"]
 name = "tsmtool"
 
 dependencies = [
-  "bs4==0.0.1",
-  "click==8.0.4",
-  "requests==2.27.1",
+  "bs4",
+  "click",
+  "requests",
   "tabulate"
 ]
 
 [project.optional-dependencies]
 dev = [
-  "black==22.1.0",
-  "bump2version==1.0.1",
-  "coverage==6.3.2",
-  "flake8==4.0.1",
-  "flit==3.7.1",
-  "pytest==7.1.1",
-  "pytest-datadir==1.3.1",
-  "tox==3.24.5",
+  "black",
+  "bump2version",
+  "coverage",
+  "flake8",
+  "flit",
+  "pytest",
+  "pytest-datadir",
+  "tox",
   "pdbpp"
 ]
 docs = [
-  "m2r2==0.3.2",
-  "Sphinx==4.5.0",
-  "sphinx-click==3.1.0",
-  "sphinx-rtd-theme==1.0.0"
+  "m2r2",
+  "Sphinx",
+  "sphinx-click",
+  "sphinx-rtd-theme"
 ]
 
 [project.urls]
