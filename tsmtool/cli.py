@@ -37,6 +37,8 @@ DEFAULT_CONFIG = Path(os.environ["HOME"]) / ".tsmtool"
 @click.option("--balances", is_flag=True, help="include daily balances")
 @click.option("--payments", is_flag=True, help="include payments")
 @click.option("--last-payment", is_flag=True, help="include last payment")
+@click.option("--daily", is_flag=True, help="include daily spend")
+@click.option("--days", type=int, default=0, help="payment calculator days")
 @click.option("--raw", is_flag=True, help="raw data only (skip calculated fields)")
 @click.option("--list", "_list", is_flag=True, help="list accounts in config file")
 @click.option(
@@ -65,6 +67,8 @@ def cli(
     fmt,
     tablefmt,
     last_payment,
+    daily,
+    days
 ):
     """login to tarsnap.com and output account status as JSON data
 
@@ -92,9 +96,9 @@ def cli(
     elif _all:
         for _account in tarsnap.config:
             tarsnap = Tarsnap(config_file, _account)
-            output[_account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment)
+            output[_account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment, daily=daily, days=days)
     else:
-        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment)
+        output[tarsnap.account] = tarsnap.get_status(rows, balances, payments, raw, last_payment=last_payment, daily=daily, days=days)
 
     if fmt == "table":
         output = [dict(name=k, **v) for k, v in output.items()]

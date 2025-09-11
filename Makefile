@@ -1,5 +1,7 @@
 # top-level Makefile 
 
+default: help
+
 # remove module from the local python environment
 uninstall: 
 	pip uninstall -yqq $(project)

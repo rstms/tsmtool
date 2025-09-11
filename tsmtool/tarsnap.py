@@ -74,18 +74,25 @@ class Tarsnap:
         return balance, account, verbose_soup
 
     def _handle_row(self, r, row):
+        payment_amount = 0
         if row[0] == "Balance":
-            r["balances"].append((row[1], float(row[6])))
-        if row[0] == "Payment":
-            payment = float(row[5])
-            r["payments"][row[1]] = payment
-        else:
-            payment = 0
-        return payment
+            day_balance = float(row[6])
+            r["balances"].append((row[1], day_balance))
+            if self.last_balance != 0.0:
+                daily_spend = self.last_balance - day_balance
+                self.spends[row[1]] = daily_spend
+            self.last_balance = day_balance
+        elif row[0] == "Payment":
+            payment_amount = float(row[5])
+            self.last_balance += payment_amount
+            r["payments"][row[1]] = payment_amount
+        return payment_amount
 
     def get_status(
-        self, rows=False, balances=False, payments=False, raw=False, email=None, password=None, last_payment=False
+        self, rows=False, balances=False, payments=False, raw=False, email=None, password=None, last_payment=False, daily=False, days=0
     ):
+
+        target_date = self.calculate_target_date(days)
 
         email = email or self.email
         password = password or self.password
@@ -108,12 +115,23 @@ class Tarsnap:
         for el in soup.find("table").find_all("tr"):
             r["rows"].append([el.text for el in el.find_all("td")])
 
+        self.last_balance = 0.0
+        self.spends = {}
         for row in r["rows"]:
             payment_total += self._handle_row(r, row)
 
         if not raw:
+            daily_cost = sum(self.spends.values()) / len(self.spends)
+            monthly_cost = daily_cost * 365.0 / 12.0
             if r["balances"]:
-                r["monthly_cost"] = self.calculate_monthly_cost(r["balances"], payment_total)
+                r["monthly"] = monthly_cost
+                if daily:
+                    r["daily"] = daily_cost
+                #monthly_cost = self.calculate_monthly_cost(r["balances"], payment_total)
+                #r["daily"] = self._round(daily_cost)
+                if days != 0:
+                    r[target_date] = self._round(self.calculate_payment(balance, daily_cost, days))
+                r["paid days"] = self.calculate_days(balance, daily_cost)
 
         if not rows:
             del r["rows"]
@@ -144,3 +162,20 @@ class Tarsnap:
             last_date = sorted(list(payments.keys()))[-1]
             last_amount = payments[last_date]
         return dict(last_payment_date=last_date, last_payment_amount=last_amount)
+
+    def calculate_days(self, balance, daily_cost): 
+        days =  balance / daily_cost
+        if days < 0:
+            days -= 1
+        return int(days)
+
+    def calculate_payment(self, balance, daily_cost, days):
+        if balance > daily_cost * days:
+            return 0.0
+        return float(int((daily_cost * days - balance) + 1))
+
+    def calculate_target_date(self, days):
+        target_date = datetime.datetime.today() + datetime.timedelta(days=days)
+        return datetime.datetime.strftime(target_date, "%Y-%m-%d")
+        
+
