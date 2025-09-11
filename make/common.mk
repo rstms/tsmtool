@@ -17,7 +17,7 @@ cli := $(shell tq -r '.project.scripts|keys|.[0]' pyproject.toml)
 # sanity checks
 $(if $(project),,$(error failed to read project name from pyproject.toml))
 $(if $(shell [ -d ../"$(project)" ] || echo X),$(error project dir $(project) not found))
-$(if $(shell [ $$(readlink -e ../$(project)) = $$(readlink -e .) ] || echo X),$(error mismatch: $(project) != .))
+$(if $(shell [ $$(readlink -f ../$(project)) = $$(readlink -f .) ] || echo X),$(error mismatch: $(project) != .))
 $(if $(module),,$(error failed to read module name from pyproject.toml))
 $(if $(shell [ -d "./$(module)" ] || echo missing),$(error module dir '$(module)' not found))
 $(if $(shell ls $(module)/__init__.py),,$(error expected "__init__.py" in module dir '$(module)'))
